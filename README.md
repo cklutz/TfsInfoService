@@ -5,6 +5,18 @@
 A service that can provide additional information on TFS (builds) that are not provided
 by the stock VSTS or TFS services.
 
+Currently, the service only provides additional kinds of badges for your builds:
+
+|Type|Sample|
+|:---|-----:|
+|buildnumber|![buildnumber](badges/buildnumber_badge.svg)|
+|duration|![duration](badges/duration_badge.svg)|
+|finishdate|![finishdate](badges/finishdate_badge.svg)|
+|coverage|![coverage](badges/coverage_badge.svg)|
+|best-coverage|![best-coverage](badges/best-coverage_badge.svg)|
+|custom|![custom](badges/custom_sample_badge.svg)|
+
+
 The general URL syntax looks like this:
 
      http://<servicehost>:<port>/_apis/infos/<project-guid>/<build-id>/<type>/badge[?<parameters>]
@@ -19,19 +31,8 @@ You could create a custom badge:
      
 Note that for `custom` badges you can use any valid guid as `<project-guid>` and any integer as `build-id`.
 Additionally, in this case no connection to a TFS/VSTS instance is made, so you can use it for tests, etc.
-     
-For available information simply invoke 
 
-     http://<servicehost>:<port>/_apis/infos
-     
-Additional URL parameters that can be used to tweak to look of the badges:
-
-* `title`: set a custom title for the badge (the "left" text of the badge)
-* `titlefg`: specify a custom foreground color (e.g. `#fff`) for the title.
-* `titlebg`: specify a custom background color (e.g. `#fff`) for the title.
-* `valuefg`: specify a custom foreground color (e.g. `#fff`) for the value.
-* `valuebg`: specify a custom background color (e.g. `#fff`) for the value.
-* `value`: specify a custom value (only used with type `custom`).
+For more information see [Creating Badges](docs/CreatingBadges.md).
 
 ## Configuration
 
@@ -45,7 +46,7 @@ Check the [Microsoft Documentation](https://docs.microsoft.com/de-de/vsts/accoun
 You can also specify options as command line parameters, for example (`--urls` specifies the listen addresses of the service):
 
 ```
-.\TfsInfoService.exe --urls "http://localhost:4711/" --tfs.ServerUrl "https://..." --tfs.Token "...."
+.\TfsInfoService.exe --urls "http://localhost:4711/" --tfs:ServerUrl "https://..." --tfs:Token "...."
 ```
 
 ## Security

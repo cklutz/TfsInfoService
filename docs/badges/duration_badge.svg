@@ -1,0 +1,8 @@
+<svg width="109.4" height="18.9" xmlns="http://www.w3.org/2000/svg">
+  <rect width="109.4" height="18.9" fill="#f1f1f1" />
+  <rect width="54.9" height="18.9" fill="#08298A" x="55.5" />
+  <g fill="#fff" text-anchor="middle" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana" font-size="12">
+    <text x="27.7" y="14.0" fill="#000">duration</text>
+    <text x="82.4" y="14.0" fill="#fff">2,80 min</text>
+  </g>
+</svg>

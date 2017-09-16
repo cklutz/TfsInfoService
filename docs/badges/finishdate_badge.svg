@@ -1,0 +1,8 @@
+<svg width="123.5" height="18.9" xmlns="http://www.w3.org/2000/svg">
+  <rect width="123.5" height="18.9" fill="#f1f1f1" />
+  <rect width="72.8" height="18.9" fill="#08298A" x="51.7" />
+  <g fill="#fff" text-anchor="middle" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana" font-size="12">
+    <text x="25.9" y="14.0" fill="#000">finished</text>
+    <text x="87.6" y="14.0" fill="#fff">2017-09-06</text>
+  </g>
+</svg>

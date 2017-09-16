@@ -1,0 +1,8 @@
+<svg width="98.0" height="18.9" xmlns="http://www.w3.org/2000/svg">
+  <rect width="98.0" height="18.9" fill="#f1f1f1" />
+  <rect width="39.8" height="18.9" fill="#08298A" x="59.1" />
+  <g fill="#fff" text-anchor="middle" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana" font-size="12">
+    <text x="29.6" y="14.0" fill="#000">coverage</text>
+    <text x="78.5" y="14.0" fill="#fff">20,8%</text>
+  </g>
+</svg>

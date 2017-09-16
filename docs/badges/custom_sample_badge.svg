@@ -1,0 +1,8 @@
+<svg width="95.8" height="18.9" xmlns="http://www.w3.org/2000/svg">
+  <rect width="95.8" height="18.9" fill="#f1f1f1" />
+  <rect width="70.3" height="18.9" fill="black" x="26.5" />
+  <g fill="#fff" text-anchor="middle" font-family="Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana" font-size="12">
+    <text x="13.3" y="14.0" fill="#000">day</text>
+    <text x="61.2" y="14.0" fill="white">wednesday</text>
+  </g>
+</svg>
