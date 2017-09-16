@@ -17,6 +17,8 @@ namespace TfsInfoService
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<TfsOptions>(Configuration.GetSection("tfs"));
             services.AddMvc();
         }
 

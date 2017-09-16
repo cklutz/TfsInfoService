@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.TeamFoundation.Build.WebApi;
 using TfsInfoService.Utilities;
 
@@ -13,11 +14,11 @@ namespace TfsInfoService.Controllers
     [Route("_apis/infos")]
     public class InfosController : Controller
     {
-        private readonly IConfiguration m_configuration;
+        private readonly TfsOptions m_tfsOptions;
 
-        public InfosController(IConfiguration configuration)
+        public InfosController(IOptionsSnapshot<TfsOptions> tfsOptions)
         {
-            m_configuration = configuration;
+            m_tfsOptions = tfsOptions.Value;
         }
 
         [HttpGet]
@@ -46,7 +47,7 @@ namespace TfsInfoService.Controllers
             }
             else
             {
-                using (var client = m_configuration.GetBuildClient())
+                using (var client = m_tfsOptions.GetBuildClient())
                 {
                     var result = await client.GetBuildsAsync(teamProject, new[] { buildDefinitionId });
                     if (!result.Any())
@@ -92,7 +93,7 @@ namespace TfsInfoService.Controllers
         private async Task<string> GetCoverageAsync(Guid teamProject, string subType, Build build)
         {
             var sb = new StringBuilder();
-            using (var tc = m_configuration.GetTestManagementClient())
+            using (var tc = m_tfsOptions.GetTestManagementClient())
             {
                 var data = await tc.GetCodeCoverageSummaryAsync(teamProject, build.Id);
                 foreach (var entry in data.CoverageData)
@@ -119,7 +120,7 @@ namespace TfsInfoService.Controllers
         private async Task<string> GetBestCoverageAsync(Guid teamProject, Build build)
         {
             double coverage = double.MinValue;
-            using (var tc = m_configuration.GetTestManagementClient())
+            using (var tc = m_tfsOptions.GetTestManagementClient())
             {
                 var data = await tc.GetCodeCoverageSummaryAsync(teamProject, build.Id);
                 foreach (var entry in data.CoverageData)

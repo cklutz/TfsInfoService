@@ -17,22 +17,22 @@ namespace TfsInfoService.Utilities
             return connection;
         }
 
-        public static BuildHttpClient GetBuildClient(this IConfiguration configuration)
+        public static BuildHttpClient GetBuildClient(this TfsOptions configuration)
         {
-            var connection = GetVssConnection(new Uri(configuration["tfs:ServerUrl"]), configuration["tfs:Token"]);
+            var connection = GetVssConnection(new Uri(configuration.ServerUrl), configuration.Token);
             var settings = new VssHttpRequestSettings();
             return new BuildHttpClient(connection.Uri, connection.Credentials, settings);
         }
 
-        public static TestHttpClient GetTestClient(this IConfiguration configuration)
+        public static TestHttpClient GetTestClient(this TfsOptions configuration)
         {
-            var connection = GetVssConnection(new Uri(configuration["tfs:ServerUrl"]), configuration["tfs:Token"]);
+            var connection = GetVssConnection(new Uri(configuration.ServerUrl), configuration.Token);
             return new TestHttpClient(connection.Uri, connection.Credentials);
         }
 
-        public static TestManagementHttpClient GetTestManagementClient(this IConfiguration configuration)
+        public static TestManagementHttpClient GetTestManagementClient(this TfsOptions configuration)
         {
-            var connection = GetVssConnection(new Uri(configuration["tfs:ServerUrl"]), configuration["tfs:Token"]);
+            var connection = GetVssConnection(new Uri(configuration.ServerUrl), configuration.Token);
             return new TestManagementHttpClient(connection.Uri, connection.Credentials);
         }
     }
