@@ -9,12 +9,12 @@ Currently, the service only provides additional kinds of badges for your builds:
 
 |Type|Sample|
 |:---|-----:|
-|buildnumber|![buildnumber](badges/buildnumber_badge.svg)|
-|duration|![duration](badges/duration_badge.svg)|
-|finishdate|![finishdate](badges/finishdate_badge.svg)|
-|coverage|![coverage](badges/coverage_badge.svg)|
-|best-coverage|![best-coverage](badges/best-coverage_badge.svg)|
-|custom|![custom](badges/custom_sample_badge.svg)|
+|buildnumber|![buildnumber](docs/badges/buildnumber_badge.svg)|
+|duration|![duration](docs/badges/duration_badge.svg)|
+|finishdate|![finishdate](docs/badges/finishdate_badge.svg)|
+|coverage|![coverage](docs/badges/coverage_badge.svg)|
+|best-coverage|![best-coverage](docs/badges/best-coverage_badge.svg)|
+|custom|![custom](docs/badges/custom_sample_badge.svg)|
 
 
 The general URL syntax looks like this:
