@@ -16,7 +16,8 @@ namespace TfsInfoService
         public Startup(IConfiguration configuration, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
-            loggerFactory.AddFile(Path.Combine(env.ContentRootPath, @"..\logs\log-{Date}.txt"));
+            loggerFactory.AddFile(Path.Combine(env.ContentRootPath, @"logs\log-{Date}.txt"));
+            loggerFactory.AddEventLog(LogLevel.Error);
             m_logger = loggerFactory.CreateLogger(typeof(Startup));
 
             m_logger.LogInformation("Starting...");
