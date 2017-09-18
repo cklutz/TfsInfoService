@@ -71,7 +71,7 @@ namespace TfsInfoService.Controllers
                                 break;
                             case "result-age":
                                 title = title ?? "build";
-                                value = GetResultAge(subType, build, ref valuebg, ref valuefg);
+                                value = GetResultAge(subType, build, ref valuebg, ref valuefg, ref title);
                                 break;
                             case "duration":
                                 title = title ?? "duration";
@@ -106,7 +106,7 @@ namespace TfsInfoService.Controllers
             }
         }
 
-        private static string GetResultAge(string subType, Build build, ref string valuebg, ref string valuefg)
+        private static string GetResultAge(string subType, Build build, ref string valuebg, ref string valuefg, ref string title)
         {
             string value;
 
@@ -157,9 +157,20 @@ namespace TfsInfoService.Controllers
 
                 value = build.FinishTime.Value.Ago();
 
-                if ("result-label".Equals(subType, StringComparison.OrdinalIgnoreCase))
+                if (!string.IsNullOrWhiteSpace(subType))
                 {
-                    value = displayResult + " " + value;
+                    string[] subTypes = subType.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var s in subTypes)
+                    {
+                        if ("result-value".Equals(s, StringComparison.OrdinalIgnoreCase))
+                        {
+                            value = displayResult + " " + value;
+                        }
+                        else if ("buildnumber-title".Equals(s, StringComparison.OrdinalIgnoreCase))
+                        {
+                            title = build.BuildNumber;
+                        }
+                    }
                 }
             }
             return value;
