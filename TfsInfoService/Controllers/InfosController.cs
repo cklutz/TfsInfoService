@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.TeamFoundation.Build.WebApi;
 using Microsoft.TeamFoundation.Common.Internal;
@@ -17,10 +17,12 @@ namespace TfsInfoService.Controllers
     public class InfosController : Controller
     {
         private readonly TfsOptions m_tfsOptions;
+        private readonly ILogger m_logger;
 
-        public InfosController(IOptionsSnapshot<TfsOptions> tfsOptions)
+        public InfosController(IOptionsSnapshot<TfsOptions> tfsOptions, ILoggerFactory loggerFactory)
         {
             m_tfsOptions = tfsOptions.Value;
+            m_logger = loggerFactory.CreateLogger(typeof(InfosController));
         }
 
         [HttpGet]
@@ -35,65 +37,73 @@ namespace TfsInfoService.Controllers
             string value, string valuefg, string valuebg,
             string subType)
         {
-            // http://localhost:50573/_apis/infos/c4f86f26-1bf4-4452-bd7e-67db7a5c1486/335/buildnumber/badge
-            // http://localhost:50573/_apis/infos/c4f86f26-1bf4-4452-bd7e-67db7a5c1486/335/custom/badge?title=hello&value=33773
-
-            titlebg = GetValue(titlebg, "#f1f1f1");
-            titlefg = GetValue(titlefg, "#000");
-            valuebg = GetValue(valuebg, "#08298A");
-            valuefg = GetValue(valuefg, "#fff");
-
-            if (type == "custom")
+            try
             {
-                value = value ?? "-";
-            }
-            else
-            {
-                using (var client = m_tfsOptions.GetBuildClient())
+                // http://localhost:50573/_apis/infos/c4f86f26-1bf4-4452-bd7e-67db7a5c1486/335/buildnumber/badge
+                // http://localhost:50573/_apis/infos/c4f86f26-1bf4-4452-bd7e-67db7a5c1486/335/custom/badge?title=hello&value=33773
+
+                titlebg = GetValue(titlebg, "#f1f1f1");
+                titlefg = GetValue(titlefg, "#000");
+                valuebg = GetValue(valuebg, "#08298A");
+                valuefg = GetValue(valuefg, "#fff");
+
+                if (type == "custom")
                 {
-                    var result = await client.GetBuildsAsync(teamProject, new[] { buildDefinitionId });
-                    if (!result.Any())
+                    value = value ?? "-";
+                }
+                else
+                {
+                    using (var client = m_tfsOptions.GetBuildClient())
                     {
-                        return new JsonResult($"Build definition {buildDefinitionId} was not found.");
-                    }
+                        var result = await client.GetBuildsAsync(teamProject, new[] { buildDefinitionId });
+                        if (!result.Any())
+                        {
+                            return new JsonResult($"Build definition {buildDefinitionId} was not found.");
+                        }
 
-                    var build = result.First();
+                        var build = result.First();
 
-                    switch (type.ToLowerInvariant())
-                    {
-                        case "buildnumber":
-                            title = title ?? "number";
-                            value = build.BuildNumber;
-                            break;
-                        case "result-age":
-                            title = title ?? "build";
-                            value = GetResultAge(subType, build, ref valuebg, ref valuefg);
-                            break;
-                        case "duration":
-                            title = title ?? "duration";
-                            value = GetDuration(build);
-                            break;
-                        case "finishdate":
-                            title = title ?? "finished";
-                            value = GetFinishDate(build);
-                            break;
-                        case "best-coverage":
-                            title = title ?? "coverage";
-                            value = await GetBestCoverageAsync(teamProject, build);
-                            break;
-                        case "coverage":
-                            title = title ?? "coverage";
-                            value = await GetCoverageAsync(teamProject, subType, build);
-                            break;
-                        default:
-                            // Use title, value, etc. as passed.
-                            value = value ?? "-";
-                            break;
+                        switch (type.ToLowerInvariant())
+                        {
+                            case "buildnumber":
+                                title = title ?? "number";
+                                value = build.BuildNumber;
+                                break;
+                            case "result-age":
+                                title = title ?? "build";
+                                value = GetResultAge(subType, build, ref valuebg, ref valuefg);
+                                break;
+                            case "duration":
+                                title = title ?? "duration";
+                                value = GetDuration(build);
+                                break;
+                            case "finishdate":
+                                title = title ?? "finished";
+                                value = GetFinishDate(build);
+                                break;
+                            case "best-coverage":
+                                title = title ?? "coverage";
+                                value = await GetBestCoverageAsync(teamProject, build);
+                                break;
+                            case "coverage":
+                                title = title ?? "coverage";
+                                value = await GetCoverageAsync(teamProject, subType, build);
+                                break;
+                            default:
+                                // Use title, value, etc. as passed.
+                                value = value ?? "-";
+                                break;
+                        }
                     }
                 }
+                var doc = BadgeGenerator.CreateSvgBadge(title, titlefg, titlebg, value, valuefg, valuebg);
+                return Content(doc.ToString(), "image/svg+xml");
             }
-            var doc = BadgeGenerator.CreateSvgBadge(title, titlefg, titlebg, value, valuefg, valuebg);
-            return Content(doc.ToString(), "image/svg+xml");
+            catch (Exception ex)
+            {
+                m_logger.LogError($"Request failed: {Request.GetDisplayUrl()}: {ex}");
+                throw;
+            }
         }
 
         private static string GetResultAge(string subType, Build build, ref string valuebg, ref string valuefg)

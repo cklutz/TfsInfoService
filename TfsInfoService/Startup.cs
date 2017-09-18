@@ -1,16 +1,25 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace TfsInfoService
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly ILogger m_logger;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            loggerFactory.AddFile(Path.Combine(env.ContentRootPath, @"..\logs\log-{Date}.txt"));
+            m_logger = loggerFactory.CreateLogger(typeof(Startup));
+
+            m_logger.LogInformation("Starting...");
         }
 
         public IConfiguration Configuration { get; }
@@ -22,7 +31,7 @@ namespace TfsInfoService
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
