@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.WindowsServices;
@@ -8,11 +10,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace TfsInfoService
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
-            if (Environment.UserInteractive)
+            if (Environment.UserInteractive || !RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 BuildWebHost(args).Run();
             }
@@ -33,6 +35,7 @@ namespace TfsInfoService
             return WebHost.CreateDefaultBuilder(args)
                 .UseContentRoot(pathToContentRoot)
                 .UseConfiguration(configuration)
+                .UseKestrel()
                 .UseStartup<Startup>()
                 .Build();
         }
