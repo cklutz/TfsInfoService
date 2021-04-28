@@ -101,7 +101,7 @@ namespace TfsInfoService.Controllers
             }
             catch (Exception ex)
             {
-                m_logger.LogError($"Request failed: {Request.GetDisplayUrl()}: {ex}");
+                m_logger.LogError(ex, $"Request failed: {Request.GetDisplayUrl()}");
                 throw;
             }
         }
