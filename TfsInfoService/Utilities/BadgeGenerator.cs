@@ -11,7 +11,9 @@ namespace TfsInfoService.Utilities
 
         public static XDocument CreateSvgBadge(
             string titleText, string titleForeColor, string titleBackColor,
-            string valueText, string valueForeColor, string valueBackColor)
+            string valueText, string valueForeColor, string valueBackColor,
+            string toolTipText = null,
+            string href = null)
         {
             using (var font = new Font("Segoe UI", 13f, GraphicsUnit.Pixel))
             using (var graphics = Graphics.FromImage(new Bitmap(1, 1)))
@@ -32,20 +34,46 @@ namespace TfsInfoService.Utilities
                     {
                         new XAttribute("width", totalTextWidth.ToString("0.0", CultureInfo.InvariantCulture)),
                         new XAttribute("height", height.ToString("0.0", CultureInfo.InvariantCulture)),
-                        Rectangle(totalTextWidth, height, titleBackColor),
-                        Rectangle(paddedLeftWidth, width, height, valueBackColor),
-                        new XElement(s_namespace + "g", new object[]
-                        {
-                            new XAttribute("fill", "#fff"),
-                            new XAttribute("text-anchor", "middle"),
-                            new XAttribute("font-family", "Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana"),
-                            new XAttribute("font-size", "12"),
-                            Text(leftTextX, 14.0, titleText, titleForeColor),
-                            Text(rightTextX, 14.0, valueText, valueForeColor)
+                        Anchor(href, new object[] {
+                            Rectangle(totalTextWidth, height, titleBackColor),
+                            Rectangle(paddedLeftWidth, width, height, valueBackColor),
+                            new XElement(s_namespace + "g", new object[]
+                            {
+                                new XAttribute("fill", "#fff"),
+                                new XAttribute("text-anchor", "middle"),
+                                new XAttribute("font-family", "Segoe UI, Helvetica Neue, Helvetica, Arial, Verdana"),
+                                new XAttribute("font-size", "12"),
+                                new XElement(s_namespace + "title", toolTipText),
+                                Text(leftTextX, 14.0, titleText, titleForeColor),
+                                Text(rightTextX, 14.0, valueText, valueForeColor)
+                            })
                         })
                     })
                 });
             }
+        }
+
+        private static XElement Anchor(string href, params object[] content)
+        {
+            XElement el;
+            if (!string.IsNullOrWhiteSpace(href))
+            {
+                el = new XElement(s_namespace + "a", new XAttribute("href", href ?? "#"));
+
+            }
+            else
+            {
+                el = new XElement(s_namespace + "g");
+            }
+
+            if (content != null)
+            {
+                foreach (var c in content)
+                {
+                    el.Add(c);
+                }
+            }
+            return el;
         }
 
         private static XElement Rectangle(double width, double height, string fillColor)
@@ -53,7 +81,7 @@ namespace TfsInfoService.Utilities
             return new XElement(s_namespace + "rect",
                 new XAttribute("width", width.ToString("0.0", CultureInfo.InvariantCulture)),
                 new XAttribute("height", height.ToString("0.0", CultureInfo.InvariantCulture)),
-                new XAttribute("fill", fillColor));
+                (fillColor != null ? new XAttribute("fill", fillColor) : null));
         }
 
         private static XElement Rectangle(double x, double width, double height, string fillColor)

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <NoWarn>NU1701</NoWarn>
     <UserSecretsId>995df2af-b457-4780-9218-b747fa0cb346</UserSecretsId>
   </PropertyGroup>
@@ -11,8 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.EventLog" Version="6.0.0" />
+    <PackageReference Include="Microsoft.TeamFoundation.DistributedTask.WebApi" Version="16.153.0" />
     <!--<PackageReference Include="Microsoft.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.WindowsServices" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
@@ -20,7 +21,7 @@
     <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.153.0" />
     <!--<PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="15.112.1" />-->
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="1.1.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

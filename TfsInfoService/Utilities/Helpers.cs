@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.TeamFoundation.Build.WebApi;
+using Microsoft.TeamFoundation.DistributedTask.WebApi;
 using Microsoft.TeamFoundation.Test.WebApi;
 using Microsoft.TeamFoundation.TestManagement.WebApi;
 using Microsoft.VisualStudio.Services.Common;
@@ -22,6 +24,13 @@ namespace TfsInfoService.Utilities
             var connection = GetVssConnection(new Uri(configuration.ServerUrl), configuration.Token);
             var settings = new VssHttpRequestSettings();
             return new BuildHttpClient(connection.Uri, connection.Credentials, settings);
+        }
+
+        public static TaskAgentHttpClient GetTaskAgentClient(this TfsOptions configuration)
+        {
+            var connection = GetVssConnection(new Uri(configuration.ServerUrl), configuration.Token);
+            var settings = new VssHttpRequestSettings();
+            return new TaskAgentHttpClient(connection.Uri, connection.Credentials, settings);
         }
 
         public static TestHttpClient GetTestClient(this TfsOptions configuration)
