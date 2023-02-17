@@ -36,23 +36,32 @@ namespace TfsInfoService
                 o.EnableEndpointRouting = false;
             });
 
+            services.AddHsts(options =>
+            {
+                options.MaxAge = TimeSpan.FromDays(14);
+            });
+
             services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 5001;
             });
+
+            services.AddResponseCaching();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseResponseCaching();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseHsts();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
-
     }
 }

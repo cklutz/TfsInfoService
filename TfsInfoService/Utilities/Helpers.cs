@@ -47,25 +47,24 @@ namespace TfsInfoService.Utilities
 
         public static string Ago(this DateTime dt)
         {
-            TimeSpan timeSince = DateTime.Now.Subtract(dt);
+            TimeSpan timeSince = DateTime.UtcNow.Subtract(dt);
 
             if (timeSince.TotalMilliseconds < 1)
                 return "not yet";
-
             if (timeSince.TotalMinutes < 1)
                 return "just now";
             if (timeSince.TotalMinutes < 2)
                 return "1 minute ago";
             if (timeSince.TotalMinutes < 60)
-                return string.Format("{0} minutes ago", timeSince.Minutes);
+                return string.Format("{0:N0} minutes ago", timeSince.TotalMinutes);
             if (timeSince.TotalMinutes < 120)
                 return "1 hour ago";
             if (timeSince.TotalHours < 24)
-                return string.Format("{0} hours ago", timeSince.Hours);
+                return string.Format("{0:N0} hours ago", timeSince.TotalHours);
             if (timeSince.TotalDays == 1)
                 return "yesterday";
             if (timeSince.TotalDays < 7)
-                return string.Format("{0} days ago", timeSince.Days);
+                return string.Format("{0:N0} days ago", timeSince.TotalDays);
             if (timeSince.TotalDays < 14)
                 return "last week";
             if (timeSince.TotalDays < 21)

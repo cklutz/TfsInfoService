@@ -44,6 +44,7 @@ namespace TfsInfoService.Controllers
         }
 
         [HttpGet("{teamProject}/{buildDefinitionId}/{type}/badge")]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> GetBadge(Guid teamProject, int buildDefinitionId, string type,
             string title, string titlefg, string titlebg,
             string value, string valuefg, string valuebg,
@@ -305,7 +306,7 @@ namespace TfsInfoService.Controllers
                 }
                 else
                 {
-                    value = "in progress";
+                    value = "queued";
                 }
             }
             else
