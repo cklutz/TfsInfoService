@@ -50,7 +50,8 @@ namespace TfsInfoService.Controllers
             string value, string valuefg, string valuebg,
             string subType,
             string toolTip,
-            string href)
+            string href,
+            string includeTag)
         {
             try
             {
@@ -91,6 +92,16 @@ namespace TfsInfoService.Controllers
                         if (!string.IsNullOrWhiteSpace(toolTip))
                         {
                             toolTip = await GenerateToolTipText(teamProject, build, toolTip, client, scopeCache);
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(includeTag) && build.Tags != null)
+                        {
+                            var tag = build.Tags.FirstOrDefault(t => includeTag.Equals(t, StringComparison.OrdinalIgnoreCase));
+                            if (tag != null)
+                            {
+                                toolTip += " (" + tag + ")";
+                                value += " (" + tag + ")";
+                            }
                         }
 
                         link = GetLink(href, build);
